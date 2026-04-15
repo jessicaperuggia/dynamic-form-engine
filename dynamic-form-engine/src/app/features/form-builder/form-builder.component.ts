@@ -9,6 +9,9 @@ import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.com
   templateUrl: './form-builder.component.html'
 })
 export class FormBuilderComponent {
+    onSubmit(data: any) {
+  console.log('Form data:', data);
+}
   formConfig: DynamicFormField[] = [
     {
       type: 'select',
