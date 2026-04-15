@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { DynamicFormField } from '../../models/form-field.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -10,35 +11,26 @@ import { DynamicFormField } from '../../models/form-field.model';
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss']
 })
-export class DynamicFormComponent implements OnInit {
+export class DynamicFormComponent implements OnInit, OnDestroy {
   @Input() fields: DynamicFormField[] = [];
   @Output() submitForm = new EventEmitter<any>();
 
   form: FormGroup = new FormGroup({});
+  private visibilitySubscriptions: Subscription[] = [];
 
   ngOnInit() {
     const group: Record<string, FormControl> = {};
 
     this.fields.forEach(field => {
-      const validators = [];
-      if (field.validators) {
-        if (field.validators.required) validators.push(Validators.required);
-        if (field.validators.minLength) validators.push(Validators.minLength(field.validators.minLength));
-        if (field.validators.maxLength) validators.push(Validators.maxLength(field.validators.maxLength));
-        if (field.validators.pattern) validators.push(Validators.pattern(field.validators.pattern));
-      }
-
-      group[field.name] = new FormControl(field.value || '', validators);
+      group[field.name] = new FormControl(field.value || '', this.buildValidators(field));
     });
 
     this.form = new FormGroup(group);
+    this.initializeFieldVisibility();
   }
 
   isVisible(field: DynamicFormField): boolean {
-    if (!field.visibleWhen) return true;
-
-    const value = this.form.get(field.visibleWhen.field)?.value;
-    return value === field.visibleWhen.value;
+    return this.evaluateVisibility(field);
   }
 
   getControl(name: string) {
@@ -51,5 +43,56 @@ export class DynamicFormComponent implements OnInit {
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  ngOnDestroy() {
+    this.visibilitySubscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  private buildValidators(field: DynamicFormField): ValidatorFn[] {
+    const validators: ValidatorFn[] = [];
+    if (!field.validators) return validators;
+
+    if (field.validators.required) validators.push(Validators.required);
+    if (field.validators.minLength) validators.push(Validators.minLength(field.validators.minLength));
+    if (field.validators.maxLength) validators.push(Validators.maxLength(field.validators.maxLength));
+    if (field.validators.pattern) validators.push(Validators.pattern(field.validators.pattern));
+
+    return validators;
+  }
+
+  private initializeFieldVisibility() {
+    this.fields.forEach(field => {
+      if (!field.visibleWhen) return;
+
+      const dependency = this.form.get(field.visibleWhen.field);
+      if (!dependency) return;
+
+      const sub = dependency.valueChanges.subscribe(() => this.applyVisibilityState(field));
+      this.visibilitySubscriptions.push(sub);
+
+      this.applyVisibilityState(field);
+    });
+  }
+
+  private applyVisibilityState(field: DynamicFormField) {
+    const control = this.form.get(field.name);
+    if (!control) return;
+
+    if (this.evaluateVisibility(field)) {
+      control.setValidators(this.buildValidators(field));
+      control.enable({ emitEvent: false });
+    } else {
+      control.disable({ emitEvent: false });
+    }
+
+    control.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private evaluateVisibility(field: DynamicFormField): boolean {
+    if (!field.visibleWhen) return true;
+
+    const dependentControl = this.form.get(field.visibleWhen.field);
+    return dependentControl?.value === field.visibleWhen.value;
   }
 }
