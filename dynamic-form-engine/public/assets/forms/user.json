@@ -1,0 +1,8 @@
+[
+  {
+    "type": "text",
+    "label": "Name",
+    "name": "name",
+    "validators": { "required": true }
+  }
+]

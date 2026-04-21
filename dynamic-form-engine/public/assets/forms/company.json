@@ -1,0 +1,13 @@
+[
+  {
+    "type": "text",
+    "label": "Company Name",
+    "name": "companyName",
+    "validators": { "required": true }
+  },
+  {
+    "type": "text",
+    "label": "VAT",
+    "name": "vat"
+  }
+]
