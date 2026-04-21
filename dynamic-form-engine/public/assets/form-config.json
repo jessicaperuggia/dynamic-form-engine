@@ -1,0 +1,26 @@
+[
+  {
+    "type": "select",
+    "label": "User Type",
+    "name": "userType",
+    "options": [
+      { "label": "Person", "value": "person" },
+      { "label": "Company", "value": "company" }
+    ],
+    "validators": {
+      "required": true
+    }
+  },
+  {
+    "type": "text",
+    "label": "Company Name",
+    "name": "companyName",
+    "validators": {
+      "required": true
+    },
+    "visibleWhen": {
+      "field": "userType",
+      "value": "company"
+    }
+  }
+]

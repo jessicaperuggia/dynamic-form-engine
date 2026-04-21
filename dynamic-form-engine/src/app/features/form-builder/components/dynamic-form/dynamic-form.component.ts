@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { DynamicFormField } from '../../models/form-field.model';
 import { Subscription } from 'rxjs';
@@ -11,30 +11,27 @@ import { Subscription } from 'rxjs';
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss']
 })
-export class DynamicFormComponent implements OnInit, OnDestroy {
+export class DynamicFormComponent implements OnInit, OnDestroy, OnChanges {
   @Input() fields: DynamicFormField[] = [];
   @Output() submitForm = new EventEmitter<any>();
 
   form: FormGroup = new FormGroup({});
   private visibilitySubscriptions: Subscription[] = [];
 
-  ngOnInit() {
-    const group: Record<string, FormControl> = {};
+  ngOnInit() { }
 
-    this.fields.forEach(field => {
-      group[field.name] = new FormControl(field.value || '', this.buildValidators(field));
-    });
-
-    this.form = new FormGroup(group);
-    this.initializeFieldVisibility();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['fields'] && this.fields.length) {
+      this.buildForm();
+    }
   }
 
   isVisible(field: DynamicFormField): boolean {
     return this.evaluateVisibility(field);
   }
 
-  getControl(name: string) {
-    return this.form.get(name);
+  getControl(name: string): FormControl | null {
+    return this.form.get(name) as FormControl | null;
   }
 
   onSubmit() {
@@ -47,6 +44,25 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.visibilitySubscriptions.forEach(sub => sub.unsubscribe());
+  }
+  
+  private buildForm() {
+    // 🔥 limpa antes
+    this.visibilitySubscriptions.forEach(sub => sub.unsubscribe());
+    this.visibilitySubscriptions = [];
+
+    const group: Record<string, FormControl> = {};
+
+    this.fields.forEach(field => {
+      group[field.name] = new FormControl(
+        field.value || '',
+        this.buildValidators(field)
+      );
+    });
+
+    this.form = new FormGroup(group);
+
+    this.initializeFieldVisibility();
   }
 
   private buildValidators(field: DynamicFormField): ValidatorFn[] {
@@ -79,11 +95,18 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     const control = this.form.get(field.name);
     if (!control) return;
 
-    if (this.evaluateVisibility(field)) {
-      control.setValidators(this.buildValidators(field));
-      control.enable({ emitEvent: false });
+    const shouldBeVisible = this.evaluateVisibility(field);
+
+    if (shouldBeVisible) {
+      if (control.disabled) {
+        control.setValidators(this.buildValidators(field));
+        control.enable({ emitEvent: false });
+      }
     } else {
-      control.disable({ emitEvent: false });
+      if (control.enabled) {
+        control.disable({ emitEvent: false });
+        control.setValue(null, { emitEvent: false }); // opcional mas recomendado
+      }
     }
 
     control.updateValueAndValidity({ emitEvent: false });

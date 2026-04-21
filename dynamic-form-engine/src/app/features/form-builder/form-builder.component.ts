@@ -1,26 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DynamicFormField } from './models/form-field.model';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
+import { FormService } from '../../services/form.service';
 
 @Component({
   selector: 'app-form-builder',
   standalone: true,
-  imports: [DynamicFormComponent],
+  imports: [CommonModule, DynamicFormComponent],
   templateUrl: './form-builder.component.html'
 })
-export class FormBuilderComponent {
-    onSubmit(data: any) {
-  console.log('Form data:', data);
-}
-  formConfig: DynamicFormField[] = [
-    {
-      type: 'select',
-      label: 'User Type',
-      name: 'userType',
-      options: [
-        { label: 'Person', value: 'person' },
-        { label: 'Company', value: 'company' }
-      ]
-    }
-  ];
+export class FormBuilderComponent implements OnInit {
+
+  formConfig: DynamicFormField[] = [];
+
+  constructor(private formService: FormService) {}
+
+  ngOnInit() {
+    this.formService.getFormConfig().subscribe(config => {
+      this.formConfig = config;
+    });
+  }
+
+  onSubmit(data: any) {
+    console.log('Form data:', data);
+  }
 }
