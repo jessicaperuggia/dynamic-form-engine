@@ -1,0 +1,29 @@
+.container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+a {
+  padding: 10px 20px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  transition: 0.2s;
+}
+
+a:hover {
+  background: #333;
+  color: #fff;
+}

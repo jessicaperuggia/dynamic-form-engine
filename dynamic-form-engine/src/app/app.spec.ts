@@ -16,10 +16,9 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should have title signal', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, dynamic-form-engine');
+    const app = fixture.componentInstance;
+    expect((app as any).title()).toContain('dynamic-form-engine');
   });
 });
