@@ -13,8 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class DynamicFormComponent implements OnInit, OnDestroy, OnChanges {
   @Input() fields: DynamicFormField[] = [];
-  @Output() submitForm = new EventEmitter<any>();
-
+  @Output() submitForm = new EventEmitter<Record<string, unknown>>();
   form: FormGroup = new FormGroup({});
   private visibilitySubscriptions: Subscription[] = [];
 
@@ -45,9 +44,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy() {
     this.visibilitySubscriptions.forEach(sub => sub.unsubscribe());
   }
-  
+
   private buildForm() {
-    // 🔥 limpa antes
     this.visibilitySubscriptions.forEach(sub => sub.unsubscribe());
     this.visibilitySubscriptions = [];
 
@@ -105,7 +103,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       if (control.enabled) {
         control.disable({ emitEvent: false });
-        control.setValue(null, { emitEvent: false }); // opcional mas recomendado
+        control.setValue(null, { emitEvent: false });
       }
     }
 

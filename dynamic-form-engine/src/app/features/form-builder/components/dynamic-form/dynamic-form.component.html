@@ -1,13 +1,13 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
   <div *ngFor="let field of fields">
-
     <div *ngIf="isVisible(field)">
-
       <label>{{ field.label }}</label>
 
       <!-- TEXT -->
       <input *ngIf="field.type === 'text'" type="text" [formControlName]="field.name" />
+
+      <!-- TEXTAREA -->
+      <textarea *ngIf="field.type === 'textarea'" [formControlName]="field.name"></textarea>
 
       <!-- SELECT -->
       <select *ngIf="field.type === 'select'" [formControlName]="field.name">
@@ -16,16 +16,23 @@
         </option>
       </select>
 
-      <div class="error" *ngIf="getControl(field.name)?.invalid && (getControl(field.name)?.touched || getControl(field.name)?.dirty)">
-        <span *ngIf="getControl(field.name)?.errors?.['required']">{{ field.errorMessage || (field.label + ' é obrigatório') }}</span>
-        <span *ngIf="getControl(field.name)?.errors?.['minlength']">Mínimo de {{ field.validators?.minLength }} caracteres.</span>
+      <div
+        class="error"
+        *ngIf="
+          getControl(field.name)?.invalid &&
+          (getControl(field.name)?.touched || getControl(field.name)?.dirty)
+        "
+      >
+        <span *ngIf="getControl(field.name)?.errors?.['required']">{{
+          field.errorMessage || field.label + ' é obrigatório'
+        }}</span>
+        <span *ngIf="getControl(field.name)?.errors?.['minlength']"
+          >Mínimo de {{ field.validators?.minLength }} caracteres.</span
+        >
         <span *ngIf="getControl(field.name)?.errors?.['pattern']">Valor inválido.</span>
       </div>
-
     </div>
-
   </div>
 
   <button type="submit" [disabled]="form.invalid">Enviar</button>
-
 </form>

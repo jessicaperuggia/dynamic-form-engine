@@ -1,9 +1,19 @@
 <div class="container">
   <h1>Dynamic Form Engine</h1>
-  <p>Select a form:</p>
 
-  <div class="buttons">
-    <a routerLink="/form/user">User Form</a>
-    <a routerLink="/form/company">Company Form</a>
+  <p class="subtitle">
+    Generate forms dynamically from JSON configuration with validation and conditional fields.
+  </p>
+
+  <div class="cards">
+    <a routerLink="/form/user" class="card">
+      <h2>User Form</h2>
+      <p>Example registration form for individuals.</p>
+    </a>
+
+    <a routerLink="/form/company" class="card">
+      <h2>Company Form</h2>
+      <p>Example registration form for businesses.</p>
+    </a>
   </div>
 </div>

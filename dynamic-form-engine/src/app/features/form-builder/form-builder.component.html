@@ -1,6 +1,13 @@
+<a routerLink="/" href="#" class="back-link">← Back to Home</a>
+ 
 <h1>Dynamic Form Builder</h1>
-<p>Build forms dynamically based on configuration</p>
-<app-dynamic-form
-  [fields]="formConfig"
-  (submitForm)="onSubmit($event)"
-></app-dynamic-form>
+
+<p class="subtitle">This form is generated dynamically from a JSON configuration file.</p>
+
+<app-dynamic-form [fields]="formConfig" (submitForm)="onSubmit($event)"></app-dynamic-form>
+
+<div class="result" *ngIf="submittedData">
+  <h3>Submitted Data</h3>
+
+  <pre>{{ submittedData | json }}</pre>
+</div>

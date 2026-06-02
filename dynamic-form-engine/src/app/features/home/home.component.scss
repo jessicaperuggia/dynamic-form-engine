@@ -27,3 +27,24 @@ a:hover {
   background: #333;
   color: #fff;
 }
+.card {
+  display: block;
+  padding: 20px;
+  margin: 12px auto;
+  max-width: 320px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+}
+
+.subtitle {
+  margin-bottom: 40px;
+  color: #666;
+}
