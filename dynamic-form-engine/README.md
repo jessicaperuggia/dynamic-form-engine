@@ -58,8 +58,8 @@ const formConfig = [
     required: true
   }
 ];
-
-🏗️ Architecture Overview
+```
+## 🏗️ Architecture Overview
 src/app
  ├── components
  │    └── dynamic-form
@@ -67,14 +67,14 @@ src/app
  ├── services
  ├── pages
 
- ▶️ Getting Started
+## ▶️ Getting Started
     npm install
     ng serve
 
-Then open:
+### Then open:
 http://localhost:4200
 
-🎯 Engineering Focus
+## 🎯 Engineering Focus
 
 This project was designed with emphasis on:
 
@@ -84,19 +84,19 @@ Component reusability
 Reactive programming with RxJS
 Maintainability and real-world applicability
 
-📈 Future Improvements
+## 📈 Future Improvements
 Advanced validation engine driven by schema
 Drag-and-drop form builder
 Backend-driven form definitions
 State persistence and autosave
 UI/UX enhancements
 
-👩‍💻 About Me
+## 👩‍💻 About Me
 
 Frontend Developer specializing in Angular and modern web applications, focused on scalable architecture and clean code practices.
 
 Currently based in the Netherlands and open to opportunities in Europe and remote roles.
 
-📫 Contact
+## 📫 Contact
 LinkedIn: https://www.linkedin.com/in/jessica-p-constantino/
 Email: jessica.p.constantino@gmail.com
