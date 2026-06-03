@@ -1,59 +1,102 @@
-# DynamicFormEngine
+# Dynamic Form Application (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+A scalable Angular application that dynamically generates forms based on configuration objects.
 
-## Development server
+This project demonstrates a configuration-driven approach to building flexible and maintainable UI forms, commonly used in enterprise-level applications.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## 🚀 Live Demo / Repository
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- 🔗 GitHub Repository: https://github.com/SEU_USUARIO/SEU_REPO
+- (Optional) Live Demo: https://SEU-DEMO.com
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🧰 Tech Stack
 
-```bash
-ng generate component component-name
-```
+- Angular
+- TypeScript
+- RxJS
+- SCSS
+- Reactive Forms
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## ✨ Features
 
-## Building
+- Dynamic form rendering based on configuration
+- Conditional display logic for fields
+- Modular and reusable form components
+- Reactive Forms with validation support
+- Scalable architecture for enterprise use cases
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🧠 Problem Statement
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+In large-scale applications, forms often become tightly coupled to UI code, making them difficult to maintain and extend.
 
-## Running unit tests
+This project solves that by introducing a configuration-driven system where forms are fully defined through structured data instead of hardcoded templates.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## 📦 Example Configuration
 
-## Running end-to-end tests
+```ts
+const formConfig = [
+  {
+    type: 'text',
+    label: 'Name',
+    key: 'name',
+    required: true
+  },
+  {
+    type: 'email',
+    label: 'Email',
+    key: 'email',
+    required: true
+  }
+];
 
-For end-to-end (e2e) testing, run:
+🏗️ Architecture Overview
+src/app
+ ├── components
+ │    └── dynamic-form
+ ├── models
+ ├── services
+ ├── pages
 
-```bash
-ng e2e
-```
+ ▶️ Getting Started
+    npm install
+    ng serve
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Then open:
+http://localhost:4200
 
-## Additional Resources
+🎯 Engineering Focus
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This project was designed with emphasis on:
+
+Clean and scalable Angular architecture
+Separation between configuration and UI rendering
+Component reusability
+Reactive programming with RxJS
+Maintainability and real-world applicability
+
+📈 Future Improvements
+Advanced validation engine driven by schema
+Drag-and-drop form builder
+Backend-driven form definitions
+State persistence and autosave
+UI/UX enhancements
+
+👩‍💻 About Me
+
+Frontend Developer specializing in Angular and modern web applications, focused on scalable architecture and clean code practices.
+
+Currently based in the Netherlands and open to opportunities in Europe and remote roles.
+
+📫 Contact
+LinkedIn: https://www.linkedin.com/in/jessica-p-constantino/
+Email: jessica.p.constantino@gmail.com
