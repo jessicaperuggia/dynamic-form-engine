@@ -1,50 +1,264 @@
-.container {
-  text-align: center;
-  margin-top: 80px;
+$bg: #f8fafc;
+$card-bg: #fff;
+$border: #e2e8f0;
+$text-dark: #0f172a;
+$text-muted: #64748b;
+$muted-alt: #475569;
+$accent: #2563eb;
+$badge-color: #334155;
+$radius-lg: 16px;
+$radius-md: 12px;
+$pill-radius: 999px;
+$flow-gap: 16px;
+
+%card-base {
+  background: $card-bg;
+  border: 1px solid $border;
 }
 
-h1 {
-  margin-bottom: 10px;
+@mixin hover-lift($shadow: 0 12px 30px rgba(15, 23, 42, 0.08)) {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow;
+  }
 }
 
-.buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-}
+.hero {
+  min-height: 100vh;
+  padding: 60px 24px;
+  background: $bg;
 
-a {
-  padding: 10px 20px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  text-decoration: none;
-  color: #333;
-  transition: 0.2s;
-}
+  .hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-a:hover {
-  background: #333;
-  color: #fff;
-}
-.card {
-  display: block;
-  padding: 20px;
-  margin: 12px auto;
-  max-width: 320px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  text-decoration: none;
-  color: inherit;
-  transition: 0.2s ease;
-}
+  .badge {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: $pill-radius;
+    background: $border;
+    color: $badge-color;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-}
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    color: $text-dark;
+  }
 
-.subtitle {
-  margin-bottom: 40px;
-  color: #666;
+  .subtitle {
+    max-width: 700px;
+    margin: 0 auto 40px;
+    color: $muted-alt;
+    line-height: 1.7;
+    font-size: 1.1rem;
+  }
+
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 50px;
+
+    .feature {
+      padding: 10px 16px;
+      @extend %card-base;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+
+    .card {
+      @extend %card-base;
+      padding: 28px;
+      border-radius: $radius-lg;
+      text-decoration: none;
+      color: inherit;
+      text-align: left;
+      @include hover-lift();
+
+      h2 {
+        margin-bottom: 12px;
+        color: $text-dark;
+      }
+
+      p {
+        color: $text-muted;
+        line-height: 1.6;
+      }
+
+      .card-link {
+        display: inline-block;
+        margin-top: 20px;
+        font-weight: 600;
+        color: $accent;
+      }
+    }
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin: 80px 0;
+
+    .stat {
+      text-align: center;
+
+      h3 {
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+
+      p {
+        color: $text-muted;
+      }
+    }
+  }
+
+  .about {
+    padding: 80px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .section-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 60px;
+
+      h2 {
+        margin-bottom: 16px;
+        font-size: 2rem;
+      }
+
+      p {
+        color: $text-muted;
+        line-height: 1.7;
+      }
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+
+      .benefit-card {
+        @extend %card-base;
+        border-radius: $radius-lg;
+        padding: 24px;
+        @include hover-lift(0 12px 24px rgba(15, 23, 42, 0.08));
+
+        .icon {
+          font-size: 1.8rem;
+          display: block;
+          margin-bottom: 12px;
+        }
+
+        h3 {
+          margin-bottom: 10px;
+          font-size: 1.1rem;
+        }
+
+        p {
+          color: $text-muted;
+          line-height: 1.6;
+        }
+      }
+    }
+
+    .architecture {
+      margin-top: 80px;
+      text-align: center;
+
+      h2 {
+        margin-bottom: 32px;
+      }
+
+      .flow {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: $flow-gap;
+
+        .step {
+          padding: 16px 20px;
+          @extend %card-base;
+          border-radius: $radius-md;
+          font-weight: 600;
+        }
+
+        .arrow {
+          font-size: 1.4rem;
+          color: $text-muted;
+        }
+      }
+    }
+
+    .tech-stack {
+      margin-top: 80px;
+      @extend %card-base;
+      padding: 28px 20px;
+      border-radius: $radius-lg;
+
+      h2 {
+        text-align: center;
+        margin-bottom: 12px;
+      }
+
+      .tags {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .tags span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 14px;
+        border-radius: $pill-radius;
+        background: lighten($border, 2%);
+        color: $text-dark;
+        font-size: 0.95rem;
+        font-weight: 700;
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.04);
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+
+      .tags span:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      }
+
+      @media (max-width: 640px) {
+        .tags {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 400px) {
+        .tags {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
 }
