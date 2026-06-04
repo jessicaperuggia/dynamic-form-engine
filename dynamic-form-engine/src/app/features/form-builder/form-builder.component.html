@@ -4,10 +4,27 @@
 
 <p class="subtitle">This form is generated dynamically from a JSON configuration file.</p>
 
-<app-dynamic-form [fields]="formConfig" (submitForm)="onSubmit($event)"></app-dynamic-form>
+<ng-container *ngIf="formState$ | async as state">
+  <div class="status" aria-live="polite">
+    <div *ngIf="state.loading">Loading form…</div>
+    <div *ngIf="state.error" class="error">
+      {{ state.error }}
+      <button type="button" (click)="retry()">Retry</button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!state.loading && !state.error">
+    <app-dynamic-form
+      *ngIf="state.config.length"
+      [fields]="state.config"
+      (submitForm)="onSubmit($event)"
+    ></app-dynamic-form>
+
+    <div *ngIf="!state.config.length" class="empty">No fields available for this form.</div>
+  </ng-container>
+</ng-container>
 
 <div class="result" *ngIf="submittedData">
   <h3>Submitted Data</h3>
-
   <pre>{{ submittedData | json }}</pre>
 </div>

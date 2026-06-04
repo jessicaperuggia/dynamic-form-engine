@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'select' | 'textarea';
+import { FieldType } from './form-types.model';
 
 export interface FieldValidators {
   required?: boolean;
@@ -15,7 +15,6 @@ export interface DynamicFormField {
   options?: { label: string; value: any }[];
   validators?: FieldValidators;
   errorMessage?: string;
-
   visibleWhen?: {
     field: string;
     value: any;

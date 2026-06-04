@@ -1,9 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DynamicFormField } from './models/form-field.model';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { FormService } from './services/form.service';
+import { Subject, of, EMPTY, BehaviorSubject, Observable } from 'rxjs';
+import {
+  takeUntil,
+  switchMap,
+  map,
+  tap,
+  catchError,
+  timeout,
+  finalize,
+  shareReplay,
+  startWith,
+} from 'rxjs/operators';
+import { FormState } from './models/form-state.model';
 
 @Component({
   selector: 'app-form-builder',
@@ -12,24 +25,69 @@ import { FormService } from './services/form.service';
   templateUrl: './form-builder.component.html',
   styleUrls: ['./form-builder.component.scss'],
 })
-export class FormBuilderComponent implements OnInit {
-  formConfig: DynamicFormField[] = [];
+export class FormBuilderComponent {
   submittedData: Record<string, unknown> | null = null;
 
+  private reload$ = new Subject<void>();
+
+  readonly formState$: Observable<FormState>;
+
   constructor(
-    private formService: FormService,
     private route: ActivatedRoute,
-  ) {}
+    private formService: FormService
+  ) {
+    this.formState$ = this.route.paramMap.pipe(
+      map((pm: ParamMap) => pm.get('id')),
 
-  ngOnInit() {
-    const formId = this.route.snapshot.paramMap.get('id')!;
+      switchMap((id) => {
+        if (!id) {
+          return of<FormState>({
+            config: [],
+            loading: false,
+            error: 'Form not specified.',
+          });
+        }
 
-    this.formService.getFormConfig(formId).subscribe((config) => {
-      this.formConfig = config;
-    });
+        return this.reload$.pipe(
+          startWith(void 0),
+
+          switchMap(() =>
+            this.formService.getFormConfig(id).pipe(
+              timeout(8000),
+
+              map((config) => ({
+                config,
+                loading: false,
+                error: null,
+              })),
+
+              startWith({
+                config: [] as DynamicFormField[],
+                loading: true,
+                error: null,
+              }),
+
+              catchError(() =>
+                of<FormState>({
+                  config: [],
+                  loading: false,
+                  error: 'Failed to load the form.',
+                }),
+              ),
+            ),
+          ),
+        );
+      }),
+
+      shareReplay(1),
+    );
   }
 
   onSubmit(data: Record<string, unknown>) {
     this.submittedData = data;
+  }
+
+  retry() {
+    this.reload$.next();
   }
 }
