@@ -10,6 +10,6 @@ export class FormService {
   constructor(private http: HttpClient) {}
 
   getFormConfig(formId: string): Observable<DynamicFormField[]> {
-    return this.http.get<DynamicFormField[]>(`/assets/forms/${formId}.json`);
+    return this.http.get<DynamicFormField[]>(`assets/forms/${formId}.json`);
   }
 }
