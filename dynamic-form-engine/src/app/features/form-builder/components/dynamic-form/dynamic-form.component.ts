@@ -1,6 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators, ValidatorFn } from '@angular/forms';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  Validators,
+  ValidatorFn,
+} from '@angular/forms';
 import { DynamicFormField } from '../../models/form-field.model';
 import { Subscription } from 'rxjs';
 
@@ -9,7 +24,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './dynamic-form.component.html',
-  styleUrls: ['./dynamic-form.component.scss']
+  styleUrls: ['./dynamic-form.component.scss'],
 })
 export class DynamicFormComponent implements OnInit, OnDestroy, OnChanges {
   @Input() fields: DynamicFormField[] = [];
@@ -17,7 +32,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy, OnChanges {
   form: FormGroup = new FormGroup({});
   private visibilitySubscriptions: Subscription[] = [];
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['fields'] && this.fields.length) {
@@ -35,27 +50,28 @@ export class DynamicFormComponent implements OnInit, OnDestroy, OnChanges {
 
   onSubmit() {
     if (this.form.valid) {
-      this.submitForm.emit(this.form.value);
+      this.submitForm.emit(this.form.getRawValue());
+
+      this.form.reset();
+
+      this.initializeFieldVisibility();
     } else {
       this.form.markAllAsTouched();
     }
   }
 
   ngOnDestroy() {
-    this.visibilitySubscriptions.forEach(sub => sub.unsubscribe());
+    this.visibilitySubscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   private buildForm() {
-    this.visibilitySubscriptions.forEach(sub => sub.unsubscribe());
+    this.visibilitySubscriptions.forEach((sub) => sub.unsubscribe());
     this.visibilitySubscriptions = [];
 
     const group: Record<string, FormControl> = {};
 
-    this.fields.forEach(field => {
-      group[field.name] = new FormControl(
-        field.value || '',
-        this.buildValidators(field)
-      );
+    this.fields.forEach((field) => {
+      group[field.name] = new FormControl(field.value || '', this.buildValidators(field));
     });
 
     this.form = new FormGroup(group);
@@ -68,15 +84,17 @@ export class DynamicFormComponent implements OnInit, OnDestroy, OnChanges {
     if (!field.validators) return validators;
 
     if (field.validators.required) validators.push(Validators.required);
-    if (field.validators.minLength) validators.push(Validators.minLength(field.validators.minLength));
-    if (field.validators.maxLength) validators.push(Validators.maxLength(field.validators.maxLength));
+    if (field.validators.minLength)
+      validators.push(Validators.minLength(field.validators.minLength));
+    if (field.validators.maxLength)
+      validators.push(Validators.maxLength(field.validators.maxLength));
     if (field.validators.pattern) validators.push(Validators.pattern(field.validators.pattern));
 
     return validators;
   }
 
   private initializeFieldVisibility() {
-    this.fields.forEach(field => {
+    this.fields.forEach((field) => {
       if (!field.visibleWhen) return;
 
       const dependency = this.form.get(field.visibleWhen.field);
