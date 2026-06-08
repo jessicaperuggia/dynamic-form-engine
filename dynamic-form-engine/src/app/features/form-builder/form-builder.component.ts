@@ -4,18 +4,8 @@ import { DynamicFormField } from './models/form-field.model';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { FormService } from './services/form.service';
-import { Subject, of, EMPTY, BehaviorSubject, Observable } from 'rxjs';
-import {
-  takeUntil,
-  switchMap,
-  map,
-  tap,
-  catchError,
-  timeout,
-  finalize,
-  shareReplay,
-  startWith,
-} from 'rxjs/operators';
+import { Subject, of, Observable } from 'rxjs';
+import { switchMap, map, catchError, timeout, shareReplay, startWith } from 'rxjs/operators';
 import { FormState } from './models/form-state.model';
 
 @Component({
@@ -34,7 +24,7 @@ export class FormBuilderComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private formService: FormService
+    private formService: FormService,
   ) {
     this.formState$ = this.route.paramMap.pipe(
       map((pm: ParamMap) => pm.get('id')),
